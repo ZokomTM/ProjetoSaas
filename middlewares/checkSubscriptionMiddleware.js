@@ -9,6 +9,7 @@ const checkSubscription = (requiredLevel) => {
       tenantLevels.INTERMEDIARIO,
       tenantLevels.AVANCADO,
     ];
+
     const userLevelIndex = levels.indexOf(subscription_level);
     const requiredLevelIndex = levels.indexOf(requiredLevel);
 

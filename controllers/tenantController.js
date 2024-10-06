@@ -27,6 +27,8 @@ const createTenant = async (req, res) => {
       "INSERT INTO tenants (name, usuario_responsavel, subscription_level, email, servidor) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [name, usuario_responsavel, subscription_level || "free", email, servidor]
     );
+
+    permissionsDefault(result.rows[0].id); // cria roles padrões
     res.status(201).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -36,6 +38,7 @@ const createTenant = async (req, res) => {
 const addUserToTenant = async (req, res) => {
   const tenantID = req.params.tenantID;
   const userID = req.params.userID;
+  const role = req.params.role;
 
   try {
     const tenantExists = await recordExists(
@@ -46,14 +49,25 @@ const addUserToTenant = async (req, res) => {
       "SELECT id FROM users WHERE id = $1",
       [userID]
     );
+    const roleExists = await recordExists(
+      "SELECT id FROM roles WHERE tenant_id = $1 and name = $2",
+      [tenantID, role]
+    );
 
-    if (!tenantExists || !userExists) {
-      return res.status(404).json({ error: "Tenant or User not found" });
+    if (!tenantExists || !userExists || !roleExists) {
+      return res
+        .status(404)
+        .json({ error: "Tenant or User or Role not found" });
     }
 
+    const roleValues = await pool.query(
+      "SELECT id FROM roles WHERE tenant_id = $1 and name = $2",
+      [tenantID, role]
+    );
+
     const result = await pool.query(
-      "INSERT INTO user_tenants (user_id, tenant_id) VALUES ($1, $2) RETURNING *",
-      [userID, tenantID]
+      "INSERT INTO user_tenants (user_id, tenant_id, roles_id) VALUES ($1, $2, $3) RETURNING *",
+      [userID, tenantID, roleValues.rows[0].id]
     );
 
     await pool.query(
@@ -146,8 +160,9 @@ const selectTenant = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT tenants.*, user_tenants.roles_id  FROM tenants" +
+      "SELECT tenants.*, user_tenants.roles_id, roles.name as role  FROM tenants" +
         " INNER JOIN user_tenants ON tenants.id = user_tenants.tenant_id" +
+        " INNER JOIN roles ON roles.id = user_tenants.roles_id" +
         " WHERE user_tenants.user_id = $1 AND tenants.id = $2",
       [userId, tenantId]
     );
@@ -165,6 +180,7 @@ const selectTenant = async (req, res) => {
         tenantId: tenant.id,
         roleId: tenant.roles_id,
         subscription_level: tenant.subscription_level,
+        roles: tenant.role,
       },
       "your_jwt_secret",
       { expiresIn: "3h" }
@@ -180,6 +196,48 @@ const selectTenant = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+async function permissionsDefault(tenantID) {
+  const adminResult = await pool.query(
+    "INSERT INTO roles (name, description, tenant_id) VALUES ('ADMIN','Cargo que terá funções administrativas liberada', $1) RETURNING *",
+    [tenantID]
+  );
+
+  const userResult = await pool.query(
+    "INSERT INTO roles (name, description, tenant_id) VALUES ('USER','Cargo que terá funções simples de usuário liberado', $1) RETURNING *",
+    [tenantID]
+  );
+
+  const admin = adminResult.rows[0];
+  if (admin) {
+    // Adiciona todas as permissões de usuários
+    await pool.query(
+      "INSERT INTO roles_permissions (roles_id, permissions_id) VALUES ($1, $2)",
+      [admin.id, 1]
+    );
+
+    // Permissão referente a consulta de cargos
+    await pool.query(
+      "INSERT INTO roles_permissions (roles_id, permissions_id) VALUES ($1, $2)",
+      [admin.id, 10]
+    );
+  }
+
+  const user = userResult.rows[0];
+  if (user) {
+    // Permissão referente a consulta de usuários
+    await pool.query(
+      "INSERT INTO roles_permissions (roles_id, permissions_id) VALUES ($1, $2)",
+      [user.id, 5]
+    );
+
+    // Permissão referente a consulta de cargos
+    await pool.query(
+      "INSERT INTO roles_permissions (roles_id, permissions_id) VALUES ($1, $2)",
+      [user.id, 10]
+    );
+  }
+}
 
 module.exports = {
   createTenant,

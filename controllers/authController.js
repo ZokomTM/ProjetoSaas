@@ -49,7 +49,10 @@ const login = async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
-        { id: user.id, subscription_level: user.subscription_level },
+        {
+          id: user.id,
+          subscription_level: user.subscription_level,
+        },
         "your_jwt_secret",
         { expiresIn: "3h" }
       );
@@ -62,7 +65,31 @@ const login = async (req, res) => {
   }
 };
 
+const listUsers = async (req, res) => {
+  const tenantId = req.params.tenantID;
+
+  try {
+    const result = await pool.query(
+      "select users.username, users.subscription_level, users.email, users.telefone, users.nickname  " +
+        " from user_tenants" +
+        " inner join users on users.id = user_tenants.user_id " +
+        " where user_tenants.tenant_id = $1;",
+      [tenantId]
+    );
+    const users = result.rows;
+
+    if (users) {
+      res.status(200).json({ users: users });
+    } else {
+      res.status(401).json({ error: "Invalid credentials" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   register,
   login,
+  listUsers,
 };

@@ -8,7 +8,7 @@ const {
   getTenantByName,
 } = require("../controllers/tenantController");
 const authenticateToken = require("../middlewares/authMiddleware");
-const checkSubscription = require("../middlewares/checkSubscription");
+const checkSubscription = require("../middlewares/checkSubscriptionMiddleware");
 const tenantLevels = require("../helpers/subscriptionTenantLevels");
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.post(
   createTenant
 );
 router.post(
-  "/addUser/:userID/:tenantID",
+  "/addUser/:userID/:tenantID/:role",
   authenticateToken,
   checkSubscription(tenantLevels.BASICO),
   addUserToTenant

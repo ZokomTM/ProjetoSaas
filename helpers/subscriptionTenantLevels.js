@@ -1,7 +1,7 @@
 const SubscriptionTenantLevels = {
   BASICO: "basico",
   INTERMEDIARIO: "intermediario",
-  AVANCADO: "avançado",
+  AVANCADO: "avancado",
 };
 
 module.exports = SubscriptionTenantLevels;
