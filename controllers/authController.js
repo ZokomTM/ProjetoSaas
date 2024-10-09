@@ -4,8 +4,7 @@ const pool = require("../db");
 const { recordExists } = require("../helpers/dbHelpers");
 
 const register = async (req, res) => {
-  const { username, password, subscription_level, email, telefone, nickname } =
-    req.body;
+  const { username, password, email, telefone, nickname } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -23,14 +22,7 @@ const register = async (req, res) => {
 
     const result = await pool.query(
       "INSERT INTO users (username, password, subscription_level, email, telefone, nickname) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [
-        username,
-        hashedPassword,
-        subscription_level || "free",
-        email,
-        telefone,
-        nickname || username,
-      ]
+      [username, hashedPassword, "free", email, telefone, nickname || username]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
