@@ -10,7 +10,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 
 ### Autenticação
 
-#### Registrar Usuário
+**Registrar Usuário**
 
 - **URL:** `/auth/register`
 - **Método:** `POST`
@@ -18,11 +18,12 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **Entradas:**
   - `username` (string): Nome de usuário.
   - `password` (string): Senha do usuário.
+  - `subscription_level` (string, opcional): Nível de assinatura.
   - `email` (string): Email do usuário.
   - `telefone` (string): Telefone do usuário.
   - `nickname` (string, opcional): Apelido do usuário.
 
-#### Login
+**Login**
 
 - **URL:** `/auth/login`
 - **Método:** `POST`
@@ -33,7 +34,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 
 ### Usuários
 
-#### Listar Usuários
+**Listar Usuários**
 
 - **URL:** `/users/list`
 - **Método:** `GET`
@@ -42,7 +43,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 
 ### Inquilinos (Tenants)
 
-#### Criar Inquilino
+**Criar Inquilino**
 
 - **URL:** `/tenant/create`
 - **Método:** `POST`
@@ -54,7 +55,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
   - `email` (string): Email do inquilino.
   - `servidor` (string): Servidor do inquilino.
 
-#### Adicionar Usuário ao Inquilino
+**Adicionar Usuário ao Inquilino**
 
 - **URL:** `/tenant/addUser/:userID/:tenantID/:role`
 - **Método:** `POST`
@@ -64,14 +65,14 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
   - `tenantID` (string): ID do inquilino.
   - `role` (string): Papel do usuário no inquilino.
 
-#### Listar Inquilinos
+**Listar Inquilinos**
 
 - **URL:** `/tenant/list`
 - **Método:** `GET`
 - **Descrição:** Lista todos os inquilinos de um usuário.
 - **Entradas:** Nenhuma (requer autenticação).
 
-#### Obter Inquilino por ID
+**Obter Inquilino por ID**
 
 - **URL:** `/tenant/:id`
 - **Método:** `GET`
@@ -79,7 +80,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **Entradas:**
   - `id` (string): ID do inquilino.
 
-#### Obter Inquilino por Nome
+**Obter Inquilino por Nome**
 
 - **URL:** `/tenant/name/:tenantName`
 - **Método:** `GET`
@@ -87,7 +88,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **Entradas:**
   - `tenantName` (string): Nome do inquilino.
 
-#### Selecionar Inquilino
+**Selecionar Inquilino**
 
 - **URL:** `/tenant/select/:tenantID`
 - **Método:** `POST`
@@ -97,28 +98,28 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 
 ### Rotas Protegidas
 
-#### Rota Protegida
+**Rota Protegida**
 
 - **URL:** `/protected`
 - **Método:** `GET`
 - **Descrição:** Acessa uma rota protegida.
 - **Entradas:** Nenhuma (requer autenticação).
 
-#### Acesso Gratuito
+**Acesso Gratuito**
 
 - **URL:** `/free`
 - **Método:** `GET`
 - **Descrição:** Acessa uma rota com nível de assinatura gratuito.
 - **Entradas:** Nenhuma (requer autenticação e nível de assinatura gratuito).
 
-#### Acesso Intermediário
+**Acesso Intermediário**
 
 - **URL:** `/intermediaria`
 - **Método:** `GET`
 - **Descrição:** Acessa uma rota com nível de assinatura intermediário.
 - **Entradas:** Nenhuma (requer autenticação e nível de assinatura intermediário).
 
-#### Acesso Premium
+**Acesso Premium**
 
 - **URL:** `/premium`
 - **Método:** `GET`
