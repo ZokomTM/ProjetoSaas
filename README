@@ -1,6 +1,6 @@
 # Projeto SaaS
 
-Este é um projeto SaaS que utiliza Node.js e Express para fornecer uma API RESTful. A aplicação gerencia autenticação de usuários, inquilinos (tenants) e permissões de acesso.
+Este é um projeto SaaS que utiliza Node.js e Express para fornecer uma API RESTful. A aplicação gerencia autenticação de usuários, Empresas (tenants) e permissões de acesso.
 
 ## URL Base
 
@@ -18,7 +18,6 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **Entradas:**
   - `username` (string): Nome de usuário.
   - `password` (string): Senha do usuário.
-  - `subscription_level` (string, opcional): Nível de assinatura.
   - `email` (string): Email do usuário.
   - `telefone` (string): Telefone do usuário.
   - `nickname` (string, opcional): Apelido do usuário.
@@ -32,6 +31,30 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
   - `username` (string): Nome de usuário.
   - `password` (string): Senha do usuário.
 
+### Processo Intermediário
+
+**Listar Empresas Por Usuário**
+
+- **URL:** `/tenant/list`
+- **Método:** `GET`
+- **Descrição:** Lista todos os Empresas de um usuário de acordo com o Token do usuário logado.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno do Login.
+- **Entradas:** Nenhuma (requer autenticação).
+
+
+**Selecionar Inquilino**
+
+- **URL:** `/tenant/select/:tenantID`
+- **Método:** `POST`
+- **Descrição:** Seleciona um inquilino para o usuário autenticado.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno do Login.
+- **Entradas:**
+  - `tenantID` (string): ID do inquilino.
+
+*Ao selecionar o Tenant irá retornar um token com o Tenant selecionado que será utilizado nos endpoints a baixo.*
+
 ### Usuários
 
 **Listar Usuários**
@@ -39,15 +62,19 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **URL:** `/users/list`
 - **Método:** `GET`
 - **Descrição:** Lista todos os usuários de um inquilino.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
 - **Entradas:** Nenhuma (requer autenticação e permissões adequadas).
 
-### Inquilinos (Tenants)
+### Empresas (Tenants)
 
 **Criar Inquilino**
 
 - **URL:** `/tenant/create`
 - **Método:** `POST`
 - **Descrição:** Cria um novo inquilino.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
 - **Entradas:**
   - `name` (string): Nome do inquilino.
   - `usuario_responsavel` (string): Usuário responsável.
@@ -60,23 +87,20 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **URL:** `/tenant/addUser/:userID/:tenantID/:role`
 - **Método:** `POST`
 - **Descrição:** Adiciona um usuário a um inquilino com um papel específico.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
 - **Entradas:**
   - `userID` (string): ID do usuário.
   - `tenantID` (string): ID do inquilino.
   - `role` (string): Papel do usuário no inquilino.
-
-**Listar Inquilinos**
-
-- **URL:** `/tenant/list`
-- **Método:** `GET`
-- **Descrição:** Lista todos os inquilinos de um usuário.
-- **Entradas:** Nenhuma (requer autenticação).
 
 **Obter Inquilino por ID**
 
 - **URL:** `/tenant/:id`
 - **Método:** `GET`
 - **Descrição:** Obtém informações de um inquilino pelo ID.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
 - **Entradas:**
   - `id` (string): ID do inquilino.
 
@@ -85,46 +109,10 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **URL:** `/tenant/name/:tenantName`
 - **Método:** `GET`
 - **Descrição:** Obtém informações de um inquilino pelo nome.
+- ** Headers:**
+  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
 - **Entradas:**
   - `tenantName` (string): Nome do inquilino.
-
-**Selecionar Inquilino**
-
-- **URL:** `/tenant/select/:tenantID`
-- **Método:** `POST`
-- **Descrição:** Seleciona um inquilino para o usuário autenticado.
-- **Entradas:**
-  - `tenantID` (string): ID do inquilino.
-
-### Rotas Protegidas
-
-**Rota Protegida**
-
-- **URL:** `/protected`
-- **Método:** `GET`
-- **Descrição:** Acessa uma rota protegida.
-- **Entradas:** Nenhuma (requer autenticação).
-
-**Acesso Gratuito**
-
-- **URL:** `/free`
-- **Método:** `GET`
-- **Descrição:** Acessa uma rota com nível de assinatura gratuito.
-- **Entradas:** Nenhuma (requer autenticação e nível de assinatura gratuito).
-
-**Acesso Intermediário**
-
-- **URL:** `/intermediaria`
-- **Método:** `GET`
-- **Descrição:** Acessa uma rota com nível de assinatura intermediário.
-- **Entradas:** Nenhuma (requer autenticação e nível de assinatura intermediário).
-
-**Acesso Premium**
-
-- **URL:** `/premium`
-- **Método:** `GET`
-- **Descrição:** Acessa uma rota com nível de assinatura premium.
-- **Entradas:** Nenhuma (requer autenticação e nível de assinatura premium).
 
 ## Instalação
 
