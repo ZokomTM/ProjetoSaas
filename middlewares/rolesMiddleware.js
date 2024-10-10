@@ -4,7 +4,7 @@ const tenantLevels = require("../helpers/subscriptionTenantLevels");
 
 const checkRolesAccess = (rolesPermissions) => {
   return async (req, res, next) => {
-    const { tenantId, roleId, subscription_level, roles } = req.user;
+    const { tenantId, roleId, roles } = req.user;
 
     const result = await pool.query(
       "select permissions.*" +
