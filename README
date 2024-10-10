@@ -2,6 +2,64 @@
 
 Este é um projeto SaaS que utiliza Node.js e Express para fornecer uma API RESTful. A aplicação gerencia autenticação de usuários, Empresas (tenants) e permissões de acesso.
 
+## Funcionalidades por Plano
+
+**BASICO**
+
+- `Quantidade Funcionários` 15 Pessoas.
+- `Vendas` Menu de Vendas.
+  - `REGISTRAR_VENDAS`
+  - `LISTAR_VENDAS`
+  - `ALTERAR_VENDAS`
+- `Compras` Menu de Compras.
+  - `REGISTRAR_COMPRAS`
+  - `LISTAR_COMPRAS`
+  - `ALTERAR_COMPRAS`
+- `Funcionário` Área para cadastrar/gerir funcionários.
+  - `CADASTRAR_FUNCIONARIOS`
+  - `LISTAR_FUNCIONARIOS`
+  - `ALTERAR_FUNCIONARIOS`
+  - `REMOVER_FUNCIONARIO`
+- `Produtos` Área de gestão dos produtos.
+  - `CADASTRAR_PRODUTOS`
+  - `LISTAR_PRODUTOS`
+  - `ALTERAR_PRODUTOS`
+  - `ALTERAR_CATEGORIAS`
+  - `REMOVER_PRODUTOS`
+- `Comissões` Área para visualização/pagamento de comissões.
+  - `LISTAR_COMISSOES`
+  - `ALTERAR_COMISSOES`
+  - `PAGAR_COMISSOES`
+  - `REMOVER_COMISSOES`
+- `Cadastro Webhooks Discord` Área para cadastrar Webhooks discord.
+  - `CADASTRAR_WEBHOOKS`
+  - `LISTAR_WEBHOOKS`
+  - `ALTERAR_WEBHOOKS`
+  - `REMOVER_WEBHOOKS`
+- `Histórico Pagamentos/Compras/Vendas` Área para visualização dos últimas Pagamentos/Compras/Vendas.
+  - `LISTAR_HISTORICO`
+  - `ALTERAR_WEBHOOKS`
+  - `REMOVER_HISTORICO`
+
+**INTERMEDIARIO**
+
+- `Quantidade Funcionários` 30 Pessoas.
+- `Plano Basico` Contem todas funcionalidades do plano BASICO.
+- `Gestão de Ponto` Toda gestão de ponto do funcionário.
+- `Tabelas de Preço` Toda gestão de tabelas de preço customizadas.
+- `Cadastro de Grupos (aliados/parcerias)` Toda gestão de grupos.
+- `Clientes` Gestão de clientes.
+  **AVANCADO**
+
+- `Quantidade Funcionários` 60 Pessoas.
+- `Plano Intermediario` Contem todas funcionalidades do plano INTERMEDIARIO.
+- `Bau` Gestão e Organização de controle de Bau.
+- `Cargos` Gestão de cargos.
+- `Eventos` Gestão de eventos.
+- `Rifas` Gestão de Rifas (bilhete, sorteio, vendedores, compradores).
+- `Bingo` Gestão de Bingo (cartelas, sorteio, vendedores, compradores).
+- `Loteria` Gestão de Loteria (bilhete, sorteio, vendedores, compradores, acumulação).
+
 ## URL Base
 
 A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
@@ -42,7 +100,6 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
   - `Authorization` (string): Bearer: Retorno do Login.
 - **Entradas:** Nenhuma (requer autenticação).
 
-
 **Selecionar Inquilino**
 
 - **URL:** `/tenant/select/:tenantID`
@@ -53,7 +110,7 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
 - **Entradas:**
   - `tenantID` (string): ID do inquilino.
 
-*Ao selecionar o Tenant irá retornar um token com o Tenant selecionado que será utilizado nos endpoints a baixo.*
+_Ao selecionar o Tenant irá retornar um token com o Tenant selecionado que será utilizado nos endpoints a baixo._
 
 ### Usuários
 
