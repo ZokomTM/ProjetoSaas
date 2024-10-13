@@ -8,36 +8,20 @@ const {
   getTenantByName,
 } = require("../controllers/tenantController");
 const authenticateToken = require("../middlewares/authMiddleware");
-const checkSubscription = require("../middlewares/checkSubscriptionMiddleware");
-const tenantLevels = require("../helpers/subscriptionTenantLevels");
-
+const checkRolesAccess = require("../middlewares/rolesMiddleware");
+const rolesPermissions = require("../helpers/rolesPermissionsLevel");
 const router = express.Router();
 
-router.post(
-  "/create",
-  authenticateToken,
-  checkSubscription(tenantLevels.BASICO),
-  createTenant
-);
+router.post("/", authenticateToken, createTenant);
 router.post(
   "/addUser/:userID/:tenantID/:role",
   authenticateToken,
-  checkSubscription(tenantLevels.BASICO),
+  checkRolesAccess(rolesPermissions.LIBERAR_TENANT, rolesPermissions.TENANTS),
   addUserToTenant
 );
 router.get("/list", authenticateToken, listTenant);
-router.get(
-  "/:id",
-  authenticateToken,
-  checkSubscription(tenantLevels.BASICO),
-  getTenant
-);
-router.get(
-  "/name/:tenantName",
-  authenticateToken,
-  checkSubscription(tenantLevels.BASICO),
-  getTenantByName
-);
+router.get("/:id", authenticateToken, getTenant);
+router.get("/:tenantName", authenticateToken, getTenantByName);
 router.post("/select/:tenantID", authenticateToken, selectTenant);
 
 module.exports = router;
