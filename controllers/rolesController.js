@@ -60,8 +60,25 @@ const getRoleByName = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT * FROM roles WHERE name = $1 AND tenant_id = $2",
+      "SELECT roles.id, roles.name, roles.description FROM roles WHERE name = $1 AND tenant_id = $2",
       [name, tenantId]
+    );
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getRoleById = async (req, res) => {
+  const { id } = req.params;
+  const tenantId = req.user.tenantId;
+
+  console.log(id, tenantId);
+  try {
+    const result = await pool.query(
+      "SELECT roles.id, roles.name, roles.description FROM roles WHERE id = $1 AND tenant_id = $2",
+      [id, tenantId]
     );
 
     res.status(200).json(result.rows);
@@ -88,5 +105,6 @@ module.exports = {
   createRoles,
   updateRole,
   getRoleByName,
+  getRoleById,
   listAllRoles,
 };

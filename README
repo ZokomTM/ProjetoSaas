@@ -89,87 +89,129 @@ A URL base para acessar a API é: `https://projetosaas-y6vmba4x.b4a.run`
   - `username` (string): Nome de usuário.
   - `password` (string): Senha do usuário.
 
-### Processo Intermediário
+### Permissões
 
-**Listar Empresas Por Usuário**
+**Criar Permissão**
 
-- **URL:** `/tenant/list`
+- **URL:** `/permissions/create`
+- **Método:** `POST`
+- **Descrição:** Cria uma nova permissão.
+- **Entradas:**
+  - `nome` (string): Nome da permissão.
+
+### Funções
+
+**Criar Função**
+
+- **URL:** `/roles/`
+- **Método:** `POST`
+- **Descrição:** Cria uma nova função.
+- **Entradas:**
+  - `name` (string): Nome da função.
+  - `description` (string): Descrição da função.
+
+**Atualizar Função**
+
+- **URL:** `/roles/:id`
+- **Método:** `PUT`
+- **Descrição:** Atualiza uma função existente.
+- **Entradas:**
+  - `name` (string): Nome da função.
+  - `description` (string): Descrição da função.
+
+**Obter Função por Nome**
+
+- **URL:** `/roles/name/:name`
 - **Método:** `GET`
-- **Descrição:** Lista todos os Empresas de um usuário de acordo com o Token do usuário logado.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno do Login.
-- **Entradas:** Nenhuma (requer autenticação).
+- **Descrição:** Obtém uma função pelo nome.
 
-**Selecionar Inquilino**
+**Obter Função por ID**
+
+- **URL:** `/roles/id/:id`
+- **Método:** `GET`
+- **Descrição:** Obtém uma função pelo ID.
+
+**Listar Todas as Funções**
+
+- **URL:** `/roles/`
+- **Método:** `GET`
+- **Descrição:** Lista todas as funções.
+
+### Produtos
+
+**Criar Produto**
+
+- **URL:** `/products`
+- **Método:** `POST`
+- **Descrição:** Cria um novo produto.
+- **Entradas:**
+  - `name` (string): Nome do produto.
+  - `description` (string): Descrição do produto.
+
+**Atualizar Produto**
+
+- **URL:** `/products/:productID`
+- **Método:** `PUT`
+- **Descrição:** Atualiza um produto existente.
+- **Entradas:**
+  - `name` (string): Nome do produto.
+  - `description` (string): Descrição do produto.
+
+**Obter Produto por Nome**
+
+- **URL:** `/products/:name`
+- **Método:** `GET`
+- **Descrição:** Obtém um produto pelo nome.
+
+### Tenants
+
+**Selecionar Tenant**
 
 - **URL:** `/tenant/select/:tenantID`
 - **Método:** `POST`
-- **Descrição:** Seleciona um inquilino para o usuário autenticado.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno do Login.
+- **Descrição:** Seleciona um Tenant para o usuário autenticado.
 - **Entradas:**
-  - `tenantID` (string): ID do inquilino.
+  - `tenantID` (string): ID do Tenant.
 
-_Ao selecionar o Tenant irá retornar um token com o Tenant selecionado que será utilizado nos endpoints a baixo._
-
-### Usuários
-
-**Listar Usuários**
-
-- **URL:** `/users/list`
-- **Método:** `GET`
-- **Descrição:** Lista todos os usuários de um inquilino.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
-- **Entradas:** Nenhuma (requer autenticação e permissões adequadas).
-
-### Empresas (Tenants)
-
-**Criar Inquilino**
-
-- **URL:** `/tenant/create`
-- **Método:** `POST`
-- **Descrição:** Cria um novo inquilino.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
-- **Entradas:**
-  - `name` (string): Nome do inquilino.
-  - `usuario_responsavel` (string): Usuário responsável.
-  - `subscription_level` (string, opcional): Nível de assinatura.
-  - `email` (string): Email do inquilino.
-  - `servidor` (string): Servidor do inquilino.
-
-**Adicionar Usuário ao Inquilino**
+**Adicionar Usuário ao Tenant**
 
 - **URL:** `/tenant/addUser/:userID/:tenantID/:role`
 - **Método:** `POST`
-- **Descrição:** Adiciona um usuário a um inquilino com um papel específico.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
+- **Descrição:** Adiciona um usuário a um Tenant com um papel específico.
 - **Entradas:**
   - `userID` (string): ID do usuário.
-  - `tenantID` (string): ID do inquilino.
-  - `role` (string): Papel do usuário no inquilino.
+  - `tenantID` (string): ID do Tenant.
+  - `role` (string): Papel do usuário no Tenant.
 
-**Obter Inquilino por ID**
+**Criar Tenant**
+
+- **URL:** `/tenant/create`
+- **Método:** `POST`
+- **Descrição:** Cria um novo Tenant.
+- **Entradas:**
+  - `name` (string): Nome do Tenant.
+  - `usuario_responsavel` (string): Usuário responsável.
+  - `subscription_level` (string, opcional): Nível de assinatura.
+  - `email` (string): Email do Tenant.
+  - `servidor` (string): Servidor do Tenant.
+
+**Listar Tenants**
+
+- **URL:** `/tenant/list`
+- **Método:** `GET`
+- **Descrição:** Lista todos os Tenants.
+
+**Obter Tenant por ID**
 
 - **URL:** `/tenant/:id`
 - **Método:** `GET`
-- **Descrição:** Obtém informações de um inquilino pelo ID.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
-- **Entradas:**
-  - `id` (string): ID do inquilino.
+- **Descrição:** Obtém informações de um Tenant pelo ID.
 
-**Obter Inquilino por Nome**
+**Obter Tenant por Nome**
 
 - **URL:** `/tenant/name/:tenantName`
 - **Método:** `GET`
-- **Descrição:** Obtém informações de um inquilino pelo nome.
-- ** Headers:**
-  - `Authorization` (string): Bearer: Retorno da seleção das Empresas.
-- **Entradas:**
-  - `tenantName` (string): Nome do inquilino.
+- **Descrição:** Obtém informações de um Tenant pelo nome.
 
 ## Instalação
 

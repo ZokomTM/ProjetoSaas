@@ -18,7 +18,7 @@ router.post(
 );
 
 router.put(
-  "/:id",
+  "/:productID",
   authenticateToken,
   checkRolesAccess(rolesPermissions.ALTERAR_PRODUTO, rolesPermissions.PRODUTOS),
   updateProduct

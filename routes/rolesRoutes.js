@@ -3,6 +3,7 @@ const {
   createRoles,
   updateRole,
   getRoleByName,
+  getRoleById,
   listAllRoles,
 } = require("../controllers/rolesController");
 const authenticateToken = require("../middlewares/authMiddleware");
@@ -25,10 +26,17 @@ router.put(
 );
 
 router.get(
-  "/:name",
+  "/name/:name",
   authenticateToken,
   checkRolesAccess(rolesPermissions.LISTAR_ROLES, rolesPermissions.ROLES),
   getRoleByName
+);
+
+router.get(
+  "/id/:id",
+  authenticateToken,
+  checkRolesAccess(rolesPermissions.LISTAR_ROLES, rolesPermissions.ROLES),
+  getRoleById
 );
 
 router.get(
