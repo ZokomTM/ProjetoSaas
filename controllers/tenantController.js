@@ -89,7 +89,7 @@ const listTenant = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT tenants.* FROM tenants INNER JOIN user_tenants ON tenants.id = user_tenants.tenant_id WHERE user_tenants.user_id = $1",
+      "SELECT tenants.id, tenants.name, tenants.usuario_responsavel, tenants.servidor FROM tenants INNER JOIN user_tenants ON tenants.id = user_tenants.tenant_id WHERE user_tenants.user_id = $1",
       [userId]
     );
     res.json(result.rows);
@@ -114,9 +114,10 @@ const getTenant = async (req, res) => {
       return res.status(404).json({ error: "Tenant not found" });
     }
 
-    const result = await pool.query("SELECT * FROM tenants WHERE id = $1", [
-      tenantId,
-    ]);
+    const result = await pool.query(
+      "SELECT tenants.id, tenants.name, tenants.usuario_responsavel, tenants.servidor FROM tenants WHERE id = $1",
+      [tenantId]
+    );
     res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });

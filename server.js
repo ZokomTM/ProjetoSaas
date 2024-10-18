@@ -7,7 +7,7 @@ const tenantRoutes = require("./routes/tenantsRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 const permissionsRoutes = require("./routes/permissionsRoutes");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3333;
 
 app.use(cors());
 app.use(express.json());
