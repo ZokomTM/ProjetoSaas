@@ -34,24 +34,30 @@ const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const result = await pool.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username = $1 OR email = $1",
+      [username]
+    );
     const user = result.rows[0];
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign(
-        {
-          id: user.id,
-          subscription_level: user.subscription_level,
-        },
-        "your_jwt_secret",
-        { expiresIn: "3h" }
-      );
-      res.json({ token });
-    } else {
-      res.status(401).json({ error: "Invalid credentials" });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        subscription_level: user.subscription_level,
+      },
+      "your_jwt_secret",
+      { expiresIn: "3h" }
+    );
+    res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
