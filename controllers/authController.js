@@ -77,7 +77,7 @@ const login = async (req, res) => {
         subscription_level: user.subscription_level,
       },
       "your_jwt_secret",
-      { expiresIn: "3h" }
+      { expiresIn: "1h" }
     );
     res.json({ token });
   } catch (err) {
