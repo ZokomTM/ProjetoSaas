@@ -8,12 +8,34 @@ const register = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
+    if (!username || username == "") {
+      return res
+        .status(409)
+        .json({ error: "Nome de usuário deve ser informado!" });
+    }
+
+    if (!email || email == "") {
+      return res.status(409).json({ error: "E-mail deve ser informado!" });
+    }
+
+    if (!password || password == "") {
+      return res.status(409).json({ error: "Senha deve ser informado!" });
+    }
+
     const userExists = await recordExists(
       "SELECT id FROM users WHERE username = $1",
       [username]
     );
     if (userExists) {
       return res.status(409).json({ error: "Nome de usuário já está em uso!" });
+    }
+
+    const emailExists = await recordExists(
+      "SELECT id FROM users WHERE email = $1",
+      [email]
+    );
+    if (emailExists) {
+      return res.status(409).json({ error: "E-mail já está em uso!" });
     }
 
     if (!password || password == "") {
@@ -63,6 +85,10 @@ const login = async (req, res) => {
   }
 };
 
+const valid = async (req, res) => {
+  res.status(200).json({ valid: true });
+};
+
 const listUsers = async (req, res) => {
   const tenantId = req.params.tenantID;
 
@@ -89,5 +115,6 @@ const listUsers = async (req, res) => {
 module.exports = {
   register,
   login,
+  valid,
   listUsers,
 };
