@@ -6,6 +6,7 @@ const usersRoutes = require("./routes/userRoutes");
 const tenantRoutes = require("./routes/tenantsRoutes");
 const productsRoutes = require("./routes/productsRoutes");
 const permissionsRoutes = require("./routes/permissionsRoutes");
+const employerRoutes = require("./routes/employerRoutes");
 const app = express();
 const port = process.env.PORT || 3333;
 
@@ -17,6 +18,7 @@ app.use("/users", usersRoutes);
 app.use("/tenant", tenantRoutes);
 app.use("/products", productsRoutes);
 app.use("/permissions", permissionsRoutes);
+app.use("/employer", employerRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

@@ -1,16 +1,19 @@
 const express = require("express");
-const { listUsers } = require("../controllers/usersController");
+const { createEmployer } = require("../controllers/employerController");
 const rolesPermissions = require("../helpers/rolesPermissionsLevel");
 const authenticateToken = require("../middlewares/authMiddleware");
 const checkRolesAccess = require("../middlewares/rolesMiddleware");
 
 const router = express.Router();
 
-router.get(
+router.post(
   "/",
   authenticateToken,
-  checkRolesAccess(rolesPermissions.LISTAR_USUARIOS, rolesPermissions.USUARIOS),
-  listUsers
+  checkRolesAccess(
+    rolesPermissions.ADICIONAR_FUNCIONARIO,
+    rolesPermissions.FUNCIONARIOS
+  ),
+  createEmployer
 );
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const pool = require("../db");
 
 const createPermissions = async (req, res) => {
-  const { nome } = req.body;
+  const { nome, principal, module_name } = req.body;
 
   if (!nome) {
     return res.status(400).json({ error: "Nome precisa ser informado!" });
@@ -9,8 +9,8 @@ const createPermissions = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO permissions (name) VALUES ($1) RETURNING *",
-      [nome]
+      "INSERT INTO permissions (name, principal, module_name) VALUES ($1, $2, $3) RETURNING *",
+      [nome, principal, module_name]
     );
 
     res.status(201).json(result.rows[0]);

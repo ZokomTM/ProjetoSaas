@@ -23,19 +23,13 @@ const register = async (req, res) => {
     }
 
     const userExists = await recordExists(
-      "SELECT id FROM users WHERE username = $1",
-      [username]
+      "SELECT users.id FROM users WHERE users.id > 0 AND (users.username = $1 OR users.email = $2)",
+      [username, email]
     );
     if (userExists) {
-      return res.status(409).json({ error: "Nome de usuário já está em uso!" });
-    }
-
-    const emailExists = await recordExists(
-      "SELECT id FROM users WHERE email = $1",
-      [email]
-    );
-    if (emailExists) {
-      return res.status(409).json({ error: "E-mail já está em uso!" });
+      return res
+        .status(409)
+        .json({ error: "Nome de usuário ou E-mail já está em uso!" });
     }
 
     if (!password || password == "") {
@@ -43,7 +37,7 @@ const register = async (req, res) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO users (username, password, subscription_level, email, telefone, nickname) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      "INSERT INTO users (username, password, subscription_level, email, phone, nickname) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [username, hashedPassword, "free", email, telefone, nickname || username]
     );
     res.status(201).json(result.rows[0]);
@@ -63,12 +57,12 @@ const login = async (req, res) => {
     const user = result.rows[0];
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "Usuário não encontrado." });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: "Credenciais erradas." });
     }
 
     const token = jwt.sign(
@@ -94,10 +88,10 @@ const listUsers = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "select users.username, users.subscription_level, users.email, users.telefone, users.nickname  " +
-        " from user_tenants" +
-        " inner join users on users.id = user_tenants.user_id " +
-        " where user_tenants.tenant_id = $1;",
+      "SELECT users.username, users.subscription_level, users.email, users.phone, users.nickname " +
+        "FROM user_tenants " +
+        "INNER JOIN users ON users.id = user_tenants.user_id " +
+        "WHERE user_tenants.tenant_id = $1;",
       [tenantId]
     );
     const users = result.rows;
